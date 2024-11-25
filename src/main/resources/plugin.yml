@@ -1,0 +1,11 @@
+name: drts-auth-plugin
+main: DRTSPlugins.drtsAuthPlugin.DrtsAuthPlugin
+version: '1.0-SNAPSHOT'
+api-version: '1.21'
+commands:
+  login:
+    description: Войти в систему.
+    usage: /login <пароль>
+  register:
+    description: Зарегистрироваться в системе.
+    usage: /register <пароль> <подтверждение пароля>
