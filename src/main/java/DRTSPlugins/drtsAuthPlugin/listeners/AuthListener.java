@@ -1,6 +1,6 @@
 package DRTSPlugins.drtsAuthPlugin.listeners;
 
-import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.SessionsRepository;
+import DRTSPlugins.drtsAuthPlugin.services.SessionsService;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,15 +8,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
 public class AuthListener implements Listener {
-    private final SessionsRepository sessionsRepository;
+    private final SessionsService sessionsService;
 
-    public AuthListener(SessionsRepository sessionsRepository) {
-        this.sessionsRepository = sessionsRepository;
+    public AuthListener(SessionsService sessionsService) {
+        this.sessionsService = sessionsService;
     }
 
     private void handleEvent(Player player, org.bukkit.event.Cancellable event) {
-        if (!sessionsRepository.isAuthenticated(player.getUniqueId())) {
+        if (!sessionsService.isAuthenticated(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + "Вы должны войти или зарегистрироваться, чтобы сделать это.");
+
             event.setCancelled(true);
         }
     }
@@ -28,12 +29,14 @@ public class AuthListener implements Listener {
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
             return;
         }
+
         handleEvent(event.getPlayer(), event);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        sessionsRepository.deauthenticatePlayer(player.getUniqueId());
+
+        sessionsService.deauthenticatePlayer(player.getUniqueId());
     }
 }

@@ -1,8 +1,8 @@
 package DRTSPlugins.drtsAuthPlugin.commands;
 
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.entities.UserEntity;
-import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.SessionsRepository;
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.UsersRepository;
+import DRTSPlugins.drtsAuthPlugin.services.SessionsService;
 import DRTSPlugins.drtsAuthPlugin.utils.PasswordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,11 +14,11 @@ import java.util.Optional;
 
 public class RegisterCommandExecutor implements CommandExecutor {
     private final UsersRepository usersRepository;
-    private final SessionsRepository sessionsRepository;
+    private final SessionsService sessionsService;
 
-    public RegisterCommandExecutor(UsersRepository usersRepository, SessionsRepository sessionsRepository) {
+    public RegisterCommandExecutor(UsersRepository usersRepository, SessionsService sessionsService) {
         this.usersRepository = usersRepository;
-        this.sessionsRepository = sessionsRepository;
+        this.sessionsService = sessionsService;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class RegisterCommandExecutor implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (sessionsRepository.isAuthenticated(player.getUniqueId())) {
+        if (sessionsService.isAuthenticated(player.getUniqueId())) {
             player.sendMessage(ChatColor.GREEN + "Вы уже вошли в систему.");
             return true;
         }
@@ -58,7 +58,7 @@ public class RegisterCommandExecutor implements CommandExecutor {
             } else {
                 String hashedPassword = PasswordUtils.hashPassword(password);
                 usersRepository.saveUser(playerName, hashedPassword);
-                sessionsRepository.authenticatePlayer(player.getUniqueId());
+                sessionsService.authenticatePlayer(player.getUniqueId());
                 player.sendMessage(ChatColor.GREEN + "Вы успешно зарегистрировались и вошли в систему!");
             }
         } catch (SQLException e) {

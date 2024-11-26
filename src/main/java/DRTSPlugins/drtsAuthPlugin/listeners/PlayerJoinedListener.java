@@ -2,8 +2,9 @@ package DRTSPlugins.drtsAuthPlugin.listeners;
 
 import DRTSPlugins.drtsAuthPlugin.DrtsAuthPlugin;
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.entities.UserEntity;
-import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.SessionsRepository;
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.UsersRepository;
+import DRTSPlugins.drtsAuthPlugin.services.SessionsService;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,11 +19,11 @@ import java.util.UUID;
 public class PlayerJoinedListener implements Listener {
     private final DrtsAuthPlugin plugin;
     private final UsersRepository usersRepository;
-    private final SessionsRepository sessionsRepository;
+    private final SessionsService sessionsService;
 
-    public PlayerJoinedListener(DrtsAuthPlugin plugin, UsersRepository usersRepository, SessionsRepository sessionsRepository) {
+    public PlayerJoinedListener(DrtsAuthPlugin plugin, UsersRepository usersRepository, SessionsService sessionsService) {
         this.usersRepository = usersRepository;
-        this.sessionsRepository = sessionsRepository;
+        this.sessionsService = sessionsService;
         this.plugin = plugin;
     }
 
@@ -32,7 +33,7 @@ public class PlayerJoinedListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         String playerName = player.getName();
 
-        if (sessionsRepository.isAuthenticated(playerUUID)) {
+        if (sessionsService.isAuthenticated(playerUUID)) {
             player.sendMessage(ChatColor.GREEN + "Добро пожаловать обратно!");
         } else {
             try {
@@ -45,12 +46,13 @@ public class PlayerJoinedListener implements Listener {
                 }
 
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    if (!sessionsRepository.isAuthenticated(playerUUID) && player.isOnline()) {
+                    if (!sessionsService.isAuthenticated(playerUUID) && player.isOnline()) {
                         player.kickPlayer(ChatColor.RED + "Вы слишком долго не входили в систему!");
                     }
                 }, 800L);
             } catch (SQLException e) {
                 player.sendMessage(ChatColor.RED + "Произошла ошибка при доступе к базе данных.");
+
                 e.printStackTrace();
             }
         }

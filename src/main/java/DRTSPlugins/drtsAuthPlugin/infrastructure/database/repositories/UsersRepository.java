@@ -20,7 +20,9 @@ public class UsersRepository {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
+
             preparedStatement.setString(2, password);
+
             preparedStatement.executeUpdate();
         }
     }
@@ -39,10 +41,12 @@ public class UsersRepository {
                     String password = resultSet.getString("password");
 
                     UserEntity user = new UserEntity(id, fetchedUsername, password);
+
                     return Optional.of(user);
                 }
             }
         }
+
         return Optional.empty();
     }
 }

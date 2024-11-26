@@ -1,10 +1,12 @@
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/DrtsAuthPlugin.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/commands/LoginCommandExecutor.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/commands/RegisterCommandExecutor.java
+/Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/cache/CacheManager.java
+/Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/config/AppConfig.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/database/PostgreSQLAdapter.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/database/entities/UserEntity.java
-/Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/database/repositories/SessionsRepository.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/infrastructure/database/repositories/UsersRepository.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/listeners/AuthListener.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/listeners/PlayerJoinedListener.java
+/Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/services/SessionsService.java
 /Applications/drts-auth-plugin/src/main/java/DRTSPlugins/drtsAuthPlugin/utils/PasswordUtils.java
