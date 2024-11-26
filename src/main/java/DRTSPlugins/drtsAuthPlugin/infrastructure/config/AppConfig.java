@@ -33,7 +33,7 @@ public class AppConfig {
             try (InputStream inputStream = Files.newInputStream(configPath)) {
                 return yaml.load(inputStream);
             } catch (IOException e) {
-                throw new RuntimeException("[DRTS Plugin] Failed to read config file: " + e.getMessage());
+                throw new RuntimeException("[DRTS Auth Plugin] Failed to read config file: " + e.getMessage());
             }
         } else {
             Map<String, Object> defaultConfig = new HashMap<>();
@@ -61,7 +61,7 @@ public class AppConfig {
                 Yaml dumper = new Yaml(options);
                 dumper.dump(defaultConfig, writer);
             } catch (IOException e) {
-                throw new RuntimeException("[DRTS Plugin] Failed to create config file: " + e.getMessage());
+                throw new RuntimeException("[DRTS Auth Plugin] Failed to create config file: " + e.getMessage());
             }
 
             return defaultConfig;

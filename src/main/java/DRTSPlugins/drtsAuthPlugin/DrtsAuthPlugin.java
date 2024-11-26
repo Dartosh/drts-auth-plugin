@@ -46,7 +46,7 @@ public final class DrtsAuthPlugin extends JavaPlugin {
             CacheManager.connect(cachePort, cacheHost);
             PostgreSQLAdapter.connect(dbUrl, dbUser, dbPassword);
 
-            Bukkit.getLogger().info("[DRTS Plugin] Connected to DB");
+            Bukkit.getLogger().info("[DRTS Auth Plugin] Connected to DB");
 
             UsersRepository usersRepository = new UsersRepository(PostgreSQLAdapter.getConnection());
             SessionsService sessionsService = new SessionsService();
@@ -59,7 +59,7 @@ public final class DrtsAuthPlugin extends JavaPlugin {
             getCommand("login").setExecutor(new LoginCommandExecutor(usersRepository, sessionsService, this));
             getCommand("register").setExecutor(new RegisterCommandExecutor(usersRepository, sessionsService, this));
         } catch (SQLException error) {
-            Bukkit.getLogger().info("[DRTS Plugin] Failed to connect DB: " + error.getMessage());
+            Bukkit.getLogger().info("[DRTS Auth Plugin] Failed to connect DB: " + error.getMessage());
         }
     }
 
@@ -67,9 +67,13 @@ public final class DrtsAuthPlugin extends JavaPlugin {
     public void onDisable() {
         try {
             PostgreSQLAdapter.disconnect();
-            Bukkit.getLogger().info("[DRTS Plugin] Disconnected from DB");
+            Bukkit.getLogger().info("[DRTS Auth Plugin] Disconnected from DB");
         } catch (SQLException error) {
-            Bukkit.getLogger().info("[DRTS Plugin] Failed to disconnect DB: " + error.getMessage());
+            Bukkit.getLogger().info("[DRTS Auth Plugin] Failed to disconnect DB: " + error.getMessage());
         }
+
+
+        CacheManager.disconnect();
+        Bukkit.getLogger().info("[DRTS Auth Plugin] Disconnected from Cache DB");
     }
 }

@@ -17,9 +17,9 @@ public class CacheManager {
 
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.ping();
-            Bukkit.getLogger().info("Successfully connected to the Redis");
+            Bukkit.getLogger().info("[DRTS Auth Plugin] Successfully connected to the Redis");
         } catch (Exception e) {
-            Bukkit.getLogger().severe("Faile to connect to the Redis: " + e.getMessage());
+            Bukkit.getLogger().severe("[DRTS Auth Plugin] Failed to connect to the Redis: " + e.getMessage());
         }
     }
 
@@ -33,7 +33,7 @@ public class CacheManager {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(key, value);
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[DRTS Plugin] Error setting value in Redis: " + e.getMessage());
+            Bukkit.getLogger().severe("[DRTS Auth Plugin] Error setting value in Redis: " + e.getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ public class CacheManager {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.get(key);
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[DRTS Plugin] Error getting value from Redis: " + e.getMessage());
+            Bukkit.getLogger().severe("[DRTS Auth Plugin] Error getting value from Redis: " + e.getMessage());
             return null;
         }
     }
@@ -50,7 +50,7 @@ public class CacheManager {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.del(key);
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[DRTS Plugin] Error deleting key in Redis: " + e.getMessage());
+            Bukkit.getLogger().severe("[DRTS Auth Plugin] Error deleting key in Redis: " + e.getMessage());
         }
     }
 }

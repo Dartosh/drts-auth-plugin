@@ -25,14 +25,14 @@ public class PasswordUtils {
             Base64.Encoder enc = Base64.getEncoder();
             return enc.encodeToString(salt) + ":" + enc.encodeToString(hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException("Ошибка при хешировании пароля: " + e.getMessage(), e);
+            throw new RuntimeException("[DRTS Auth Plugin] Failed to has password: " + e.getMessage(), e);
         }
     }
 
     public static boolean verifyPassword(String providedPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");
         if (parts.length != 2) {
-            throw new IllegalArgumentException("Сохраненный пароль должен иметь формат 'salt:hash'");
+            throw new IllegalArgumentException("[DRTS Auth Plugin] Saved password should has format 'salt:hash'");
         }
 
         Base64.Decoder dec = Base64.getDecoder();
@@ -53,7 +53,7 @@ public class PasswordUtils {
 
             return true;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException("Ошибка при проверке пароля: " + e.getMessage(), e);
+            throw new RuntimeException("[DRTS Auth Plugin] Failed to check password: " + e.getMessage(), e);
         }
     }
 
