@@ -1,5 +1,6 @@
 package DRTSPlugins.drtsAuthPlugin.commands;
 
+import DRTSPlugins.drtsAuthPlugin.DrtsAuthPlugin;
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.entities.UserEntity;
 import DRTSPlugins.drtsAuthPlugin.infrastructure.database.repositories.UsersRepository;
 import DRTSPlugins.drtsAuthPlugin.services.SessionsService;
@@ -9,16 +10,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.Optional;
 
 public class RegisterCommandExecutor implements CommandExecutor {
     private final UsersRepository usersRepository;
     private final SessionsService sessionsService;
+    private final DrtsAuthPlugin plugin;
 
-    public RegisterCommandExecutor(UsersRepository usersRepository, SessionsService sessionsService) {
+    public RegisterCommandExecutor(UsersRepository usersRepository, SessionsService sessionsService, DrtsAuthPlugin plugin) {
         this.usersRepository = usersRepository;
         this.sessionsService = sessionsService;
+        this.plugin = plugin;
     }
 
     @Override
@@ -29,8 +34,10 @@ public class RegisterCommandExecutor implements CommandExecutor {
         }
 
         Player player = (Player) sender;
+        InetSocketAddress socketAddress = player.getAddress();
+        String playerAddress = socketAddress.getAddress().getHostAddress();
 
-        if (sessionsService.isAuthenticated(player.getUniqueId())) {
+        if (sessionsService.isAuthenticated(player.getUniqueId(), playerAddress)) {
             player.sendMessage(ChatColor.GREEN + "Вы уже вошли в систему.");
             return true;
         }
@@ -58,7 +65,16 @@ public class RegisterCommandExecutor implements CommandExecutor {
             } else {
                 String hashedPassword = PasswordUtils.hashPassword(password);
                 usersRepository.saveUser(playerName, hashedPassword);
-                sessionsService.authenticatePlayer(player.getUniqueId());
+                sessionsService.authenticatePlayer(player.getUniqueId(), playerAddress);
+
+                if (player.hasMetadata("preAuthAllowFlight")) {
+                    boolean preAuthAllowFlight = player.getMetadata("preAuthAllowFlight").get(0).asBoolean();
+                    player.setAllowFlight(preAuthAllowFlight);
+                    player.removeMetadata("preAuthAllowFlight", plugin);
+                } else {
+                    player.setAllowFlight(false);
+                }
+
                 player.sendMessage(ChatColor.GREEN + "Вы успешно зарегистрировались и вошли в систему!");
             }
         } catch (SQLException e) {

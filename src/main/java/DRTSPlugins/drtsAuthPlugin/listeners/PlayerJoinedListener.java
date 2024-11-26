@@ -11,7 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
+import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,10 +34,17 @@ public class PlayerJoinedListener implements Listener {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
         String playerName = player.getName();
+        InetSocketAddress socketAddress = player.getAddress();
+        String playerAddress = socketAddress.getAddress().getHostAddress();
 
-        if (sessionsService.isAuthenticated(playerUUID)) {
+
+        if (sessionsService.isAuthenticated(playerUUID, playerAddress)) {
             player.sendMessage(ChatColor.GREEN + "Добро пожаловать обратно!");
         } else {
+            player.setMetadata("preAuthAllowFlight", new FixedMetadataValue(plugin, player.getAllowFlight()));
+
+            player.setAllowFlight(true);
+
             try {
                 Optional<UserEntity> userOptional = usersRepository.getUserByUsername(playerName);
 
@@ -46,7 +55,7 @@ public class PlayerJoinedListener implements Listener {
                 }
 
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    if (!sessionsService.isAuthenticated(playerUUID) && player.isOnline()) {
+                    if (!sessionsService.isAuthenticated(playerUUID, playerAddress) && player.isOnline()) {
                         player.kickPlayer(ChatColor.RED + "Вы слишком долго не входили в систему!");
                     }
                 }, 800L);

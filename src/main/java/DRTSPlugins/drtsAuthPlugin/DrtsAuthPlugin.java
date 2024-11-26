@@ -56,8 +56,8 @@ public final class DrtsAuthPlugin extends JavaPlugin {
             pluginManager.registerEvents(new PlayerJoinedListener(this, usersRepository, sessionsService), this);
             pluginManager.registerEvents(new AuthListener(sessionsService), this);
 
-            getCommand("login").setExecutor(new LoginCommandExecutor(usersRepository, sessionsService));
-            getCommand("register").setExecutor(new RegisterCommandExecutor(usersRepository, sessionsService));
+            getCommand("login").setExecutor(new LoginCommandExecutor(usersRepository, sessionsService, this));
+            getCommand("register").setExecutor(new RegisterCommandExecutor(usersRepository, sessionsService, this));
         } catch (SQLException error) {
             Bukkit.getLogger().info("[DRTS Plugin] Failed to connect DB: " + error.getMessage());
         }
