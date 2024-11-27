@@ -32,13 +32,11 @@ public class PlayerJoinedListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
         String playerName = player.getName();
         InetSocketAddress socketAddress = player.getAddress();
         String playerAddress = socketAddress.getAddress().getHostAddress();
 
-
-        if (sessionsService.isAuthenticated(playerUUID, playerAddress)) {
+        if (sessionsService.isAuthenticated(playerName, playerAddress)) {
             player.sendMessage(ChatColor.GREEN + "Добро пожаловать обратно!");
         } else {
             player.setMetadata("preAuthAllowFlight", new FixedMetadataValue(plugin, player.getAllowFlight()));
@@ -55,7 +53,7 @@ public class PlayerJoinedListener implements Listener {
                 }
 
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    if (!sessionsService.isAuthenticated(playerUUID, playerAddress) && player.isOnline()) {
+                    if (!sessionsService.isAuthenticated(playerName, playerAddress) && player.isOnline()) {
                         player.kickPlayer(ChatColor.RED + "Вы слишком долго не входили в систему!");
                     }
                 }, 800L);
