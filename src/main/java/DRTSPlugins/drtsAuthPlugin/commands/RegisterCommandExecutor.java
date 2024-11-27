@@ -37,7 +37,7 @@ public class RegisterCommandExecutor implements CommandExecutor {
         InetSocketAddress socketAddress = player.getAddress();
         String playerAddress = socketAddress.getAddress().getHostAddress();
 
-        if (sessionsService.isAuthenticated(player.getName(), playerAddress)) {
+        if (sessionsService.isAuthenticated(player.getUniqueId(), playerAddress)) {
             player.sendMessage(ChatColor.GREEN + "Вы уже вошли в систему.");
             return true;
         }
@@ -65,7 +65,7 @@ public class RegisterCommandExecutor implements CommandExecutor {
             } else {
                 String hashedPassword = PasswordUtils.hashPassword(password);
                 usersRepository.saveUser(playerName, hashedPassword);
-                sessionsService.authenticatePlayer(playerName, playerAddress);
+                sessionsService.authenticatePlayer(player.getUniqueId(), playerAddress);
 
                 if (player.hasMetadata("preAuthAllowFlight")) {
                     boolean preAuthAllowFlight = player.getMetadata("preAuthAllowFlight").get(0).asBoolean();

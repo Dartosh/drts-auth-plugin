@@ -37,7 +37,7 @@ public class LoginCommandExecutor implements CommandExecutor {
         InetSocketAddress socketAddress = player.getAddress();
         String playerAddress = socketAddress.getAddress().getHostAddress();
 
-        if (sessionsService.isAuthenticated(player.getName(), playerAddress)) {
+        if (sessionsService.isAuthenticated(player.getUniqueId(), playerAddress)) {
             player.sendMessage(ChatColor.GREEN + "Вы уже вошли в систему.");
             return true;
         }
@@ -58,7 +58,7 @@ public class LoginCommandExecutor implements CommandExecutor {
                 String storedHash = user.getPassword();
 
                 if (PasswordUtils.verifyPassword(password, storedHash)) {
-                    sessionsService.authenticatePlayer(player.getName(), playerAddress);
+                    sessionsService.authenticatePlayer(player.getUniqueId(), playerAddress);
                     player.sendMessage(ChatColor.GREEN + "Вы успешно вошли в систему!");
 
                     if (player.hasMetadata("preAuthAllowFlight")) {

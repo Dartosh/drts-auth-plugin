@@ -25,7 +25,7 @@ public class AuthListener implements Listener {
     private void handleEvent(Player player, org.bukkit.event.Cancellable event) {
         InetSocketAddress socketAddress = player.getAddress();
 
-        if (!sessionsService.isAuthenticated(player.getName(), socketAddress.getAddress().getHostAddress())) {
+        if (!sessionsService.isAuthenticated(player.getUniqueId(), socketAddress.getAddress().getHostAddress())) {
             player.sendMessage(ChatColor.RED + "Вы должны войти или зарегистрироваться, чтобы сделать это.");
 
             event.setCancelled(true);
@@ -103,7 +103,7 @@ public class AuthListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
             InetSocketAddress socketAddress = player.getAddress();
-            if (!sessionsService.isAuthenticated(player.getName(), socketAddress.getAddress().getHostAddress())) {
+            if (!sessionsService.isAuthenticated(player.getUniqueId(), socketAddress.getAddress().getHostAddress())) {
                 event.setCancelled(true);
             }
         }
